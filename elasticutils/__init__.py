@@ -176,6 +176,10 @@ def _process_facets(facets, flags):
             # Note: This is an indicator that the facet_filter should
             # get filled in later when we know all the filters.
             facet_type['facet_filter'] = None
+        elif flags.get('size'):
+            facet_type['terms'].update({'size': flags['size']})
+        elif flags.get('order'):
+            facet_type['order'].update({'order': flags['order']})
 
         rv[fieldname] = facet_type
     return rv
