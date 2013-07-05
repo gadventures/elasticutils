@@ -180,7 +180,7 @@ def _process_facets(facets, flags):
         if flags.get('size'):
             facet_type['terms'].update({'size': flags['size']})
         if flags.get('order'):
-            facet_type['order'].update({'order': flags['order']})
+            facet_type['terms'].update({'order': flags['order']})
 
         rv[fieldname] = facet_type
     return rv
