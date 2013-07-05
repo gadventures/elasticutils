@@ -168,6 +168,19 @@ def split_field_action(s):
 
 def _process_facets(facets, flags):
     rv = {}
+    optional_flags = [
+        # Use 'field' to specify the real field if you want the facet
+        # name to be an alias
+        'field',
+        # Use 'size' to specify the number of facets to return, which is
+        # useful if you have more than the default 10 that Elasticsearch
+        # returns
+        'size',
+        # Use 'order' to set the ordering of the facets, which can be
+        # 'term', 'reverse_term', 'count', 'reverse_count'
+        'order',
+    ]
+
     for fieldname in facets:
         facet_type = {'terms': {'field': fieldname}}
         if flags.get('global_'):
@@ -177,10 +190,9 @@ def _process_facets(facets, flags):
             # get filled in later when we know all the filters.
             facet_type['facet_filter'] = None
 
-        if flags.get('size'):
-            facet_type['terms'].update({'size': flags['size']})
-        if flags.get('order'):
-            facet_type['terms'].update({'order': flags['order']})
+        for flag in optional_flags:
+            if flags.get(flag):
+                facet_type['terms'].update({flag: flags[flag]})
 
         rv[fieldname] = facet_type
     return rv
